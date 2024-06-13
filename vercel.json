@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "index.html", "use": "@vercel/static" },
+    { "src": "script.js", "use": "@vercel/static" },
+    { "src": "api/nftMetadata.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/nftMetadata", "dest": "/api/nftMetadata.js" }
+  ]
+}
