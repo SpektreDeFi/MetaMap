@@ -7,6 +7,9 @@ document.getElementById('nftForm').addEventListener('submit', async function(eve
 
   try {
     const response = await fetch(`/api/nftMetadata?tokenAddress=${tokenAddress}`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
     const metadata = await response.json();
     resultsDiv.innerHTML = JSON.stringify(metadata, null, 2);
   } catch (error) {
