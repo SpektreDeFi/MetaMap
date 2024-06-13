@@ -1,20 +1,17 @@
-const { Connection, PublicKey } = require('@solana/web3.js');
-const { fetchDigitalAsset } = require('@metaplex-foundation/mpl-token-metadata');
+const fetch = require('node-fetch');
 
 module.exports = async (req, res) => {
   const { tokenAddress } = req.query;
 
   try {
-    const connection = new Connection('https://api.mainnet-beta.solana.com');
-    const mintPublicKey = new PublicKey(tokenAddress);
+    const response = await fetch(`https://api.metaplex.com/v1/nft/${tokenAddress}`);
+    const metadata = await response.json();
 
-    // Fetch Digital Asset by Mint
-    const asset = await fetchDigitalAsset(connection, mintPublicKey);
+    if (!response.ok) {
+      throw new Error(metadata.error || 'Failed to fetch metadata');
+    }
 
-    // Log the response to check if it is valid JSON
-    console.log('Fetched asset:', asset);
-
-    res.json(asset);
+    res.json(metadata);
   } catch (error) {
     console.error('Error fetching metadata:', error);
     res.status(500).json({ error: 'Server Error', details: error.message });
