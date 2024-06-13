@@ -1,25 +1,19 @@
-const fetch = require('node-fetch');
+const { Connection, PublicKey } = require('@solana/web3.js');
+const { Metadata } = require('@metaplex-foundation/mpl-token-metadata');
 
 module.exports = async (req, res) => {
-  const { walletAddress } = req.query;
+  const { tokenAddress } = req.query;
   
   try {
-    const response = await fetch(`https://api.solscan.io/account?address=${walletAddress}`);
-    const data = await response.json();
+    const connection = new Connection('https://api.mainnet-beta.solana.com');
+    const mintPublicKey = new PublicKey(tokenAddress);
     
-    if (!data.success) {
-      return res.status(400).json({ error: 'Failed to fetch data' });
-    }
-
-    const tokenData = data.data.tokenBalances.filter(token => token.tokenAmount.uiAmount > 0);
-    const metadataPromises = tokenData.map(async token => {
-      const metadataResponse = await fetch(token.mint);
-      return metadataResponse.json();
-    });
-
-    const metadata = await Promise.all(metadataPromises);
-    res.json(metadata);
+    const metadataPDA = await Metadata.getPDA(mintPublicKey);
+    const metadataAccount = await Metadata.load(connection, metadataPDA);
+    
+    res.json(metadataAccount.data);
   } catch (error) {
-    res.status(500).json({ error: 'Server Error' });
+    console.error('Error fetching metadata:', error);
+    res.status(500).json({ error: 'Server Error', details: error.message });
   }
 };
