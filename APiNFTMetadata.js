@@ -6,7 +6,8 @@ module.exports = async (req, res) => {
   const { tokenAddress } = req.query;
 
   try {
-    const umi = createUmi('https://api.metaplex.com/das-api').use(dasApi());
+    // Use an RPC provider that supports DAS API
+    const umi = createUmi('https://rpc.helius.xyz').use(dasApi());
     const assetId = new PublicKey(tokenAddress);
 
     // Fetch Digital Asset by Mint
