@@ -6,13 +6,12 @@ module.exports = async (req, res) => {
   const { tokenAddress } = req.query;
 
   try {
-    // Initialize Umi with DAS API
     const umi = createUmi('https://api.metaplex.com/das-api').use(dasApi());
     const assetId = new PublicKey(tokenAddress);
 
     // Fetch Digital Asset by Mint
     const asset = await umi.rpc.getAsset(assetId);
-    
+
     // Log to verify the fetched data
     console.log('Fetched metadata account:', asset);
 
