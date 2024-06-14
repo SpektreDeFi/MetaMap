@@ -1,24 +1,24 @@
 const { createUmi } = require('@metaplex-foundation/umi-bundle-defaults');
 const { dasApi } = require('@metaplex-foundation/digital-asset-standard-api');
-const { PublicKey } = require('@solana/web3.js');
 
 module.exports = async (req, res) => {
-  const { tokenAddress } = req.query;
+  const { groupKey, groupValue } = req.query;
 
   try {
-    // Initialize Umi with the correct endpoint
     const umi = createUmi('https://rpc.helius.xyz').use(dasApi());
-    const assetId = new PublicKey(tokenAddress);
 
-    // Fetch Digital Asset by Mint using DAS API
-    const asset = await umi.rpc.getAsset(assetId);
+    // Fetch Digital Assets by Group using DAS API
+    const assets = await umi.rpc.getAssetsByGroup({
+      groupKey,
+      groupValue
+    });
 
     // Log to verify the fetched data
-    console.log('Fetched metadata account:', asset);
+    console.log('Fetched assets:', assets);
 
-    res.json(asset);
+    res.json(assets);
   } catch (error) {
-    console.error('Error fetching metadata:', error);
-    res.status(500).json({ error: 'Server Error', details: error.message });
+    console.error('Error fetching assets:', error.response?.data || error.message);
+    res.status(500).json({ error: 'Server Error', details: error.response?.data || error.message });
   }
 };
