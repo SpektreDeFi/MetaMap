@@ -6,17 +6,21 @@ document.getElementById('nftForm').addEventListener('submit', async function(eve
   const resultsDiv = document.getElementById('results');
   resultsDiv.innerHTML = 'Fetching assets...';
 
+  console.log(`Form submitted with groupKey: ${groupKey}, groupValue: ${groupValue}`);
+
   try {
     const response = await fetch(`/api/nftMetadata?groupKey=${groupKey}&groupValue=${groupValue}`);
-    
+    const data = await response.json();
+
+    console.log('Response from API:', data);
+
     if (response.ok) {
-      const data = await response.json();
       resultsDiv.innerHTML = JSON.stringify(data, null, 2);
     } else {
-      const errorText = await response.text();
-      resultsDiv.innerHTML = `Error: ${errorText}`;
+      resultsDiv.innerHTML = `Error: ${data.error || 'Unknown error'}`;
     }
   } catch (error) {
+    console.error('Error fetching assets:', error.message);
     resultsDiv.innerHTML = `Error fetching assets: ${error.message}`;
   }
 });
