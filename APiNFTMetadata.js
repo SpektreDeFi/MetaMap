@@ -6,11 +6,11 @@ module.exports = async (req, res) => {
   const { tokenAddress } = req.query;
 
   try {
-    // Use an RPC provider that supports DAS API
+    // Initialize Umi with the correct endpoint
     const umi = createUmi('https://rpc.helius.xyz').use(dasApi());
     const assetId = new PublicKey(tokenAddress);
 
-    // Fetch Digital Asset by Mint
+    // Fetch Digital Asset by Mint using DAS API
     const asset = await umi.rpc.getAsset(assetId);
 
     // Log to verify the fetched data
