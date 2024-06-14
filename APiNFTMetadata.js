@@ -1,7 +1,7 @@
-const { createUmi } = require('@metaplex-foundation/umi-bundle-defaults');
-const { dasApi } = require('@metaplex-foundation/digital-asset-standard-api');
+import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
+import { dasApi } from '@metaplex-foundation/digital-asset-standard-api';
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
   const { groupKey, groupValue } = req.query;
 
   try {
@@ -13,12 +13,14 @@ module.exports = async (req, res) => {
       groupValue
     });
 
-    // Log to verify the fetched data
-    console.log('Fetched assets:', assets);
+    if (assets.items.length === 0) {
+      res.status(404).json({ error: 'No assets found for the specified group.' });
+      return;
+    }
 
     res.json(assets);
   } catch (error) {
-    console.error('Error fetching assets:', error.response?.data || error.message);
-    res.status(500).json({ error: 'Server Error', details: error.response?.data || error.message });
+    console.error('Error fetching assets:', error.message || error);
+    res.status(500).json({ error: 'Server Error', details: error.message || error });
   }
 };
