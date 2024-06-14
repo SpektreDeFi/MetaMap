@@ -1,6 +1,6 @@
 document.getElementById('nftForm').addEventListener('submit', async function(event) {
   event.preventDefault();
-  
+
   const groupKey = 'collection';
   const groupValue = document.getElementById('groupValue').value;
   const resultsDiv = document.getElementById('results');
@@ -8,14 +8,15 @@ document.getElementById('nftForm').addEventListener('submit', async function(eve
 
   try {
     const response = await fetch(`/api/nftMetadata?groupKey=${groupKey}&groupValue=${groupValue}`);
-    console.log('Network response status:', response.status); // Log status
-    if (!response.ok) {
-      const errorText = await response.text(); // Get error text for more details
-      throw new Error(`Network response was not ok: ${errorText}`);
+    
+    if (response.ok) {
+      const data = await response.json();
+      resultsDiv.innerHTML = JSON.stringify(data, null, 2);
+    } else {
+      const errorText = await response.text();
+      resultsDiv.innerHTML = `Error: ${errorText}`;
     }
-    const assets = await response.json();
-    resultsDiv.innerHTML = JSON.stringify(assets, null, 2);
   } catch (error) {
-    resultsDiv.innerHTML = 'Error fetching assets: ' + error.message;
+    resultsDiv.innerHTML = `Error fetching assets: ${error.message}`;
   }
 });
