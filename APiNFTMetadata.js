@@ -4,19 +4,13 @@ import { dasApi } from '@metaplex-foundation/digital-asset-standard-api';
 export default async (req, res) => {
   const { groupKey, groupValue } = req.query;
 
+  console.log(`Received request with groupKey: ${groupKey}, groupValue: ${groupValue}`);
+
   try {
     const umi = createUmi('https://rpc.helius.xyz').use(dasApi());
 
-    // Fetch Digital Assets by Group using DAS API
-    const assets = await umi.rpc.getAssetsByGroup({
-      groupKey,
-      groupValue
-    });
-
-    if (assets.items.length === 0) {
-      res.status(404).json({ error: 'No assets found for the specified group.' });
-      return;
-    }
+    const assets = await umi.rpc.getAssetsByGroup({ groupKey, groupValue });
+    console.log('Fetched assets:', assets);
 
     res.json(assets);
   } catch (error) {
