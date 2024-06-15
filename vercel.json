@@ -1,11 +1,13 @@
 {
   "version": 2,
   "builds": [
-    { "src": "index.html", "use": "@vercel/static" },
-    { "src": "script.js", "use": "@vercel/static" },
-    { "src": "APiNFTMetadata.js", "use": "@vercel/node" }
+    { "src": "api/APINFTMetadata.js", "use": "@vercel/node" },
+    { "src": "public/index.html", "use": "@vercel/static" },
+    { "src": "public/script.js", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/api/nftMetadata", "dest": "/APiNFTMetadata.js" }
+    { "src": "/api/nftMetadata", "dest": "/api/APINFTMetadata.js" },
+    { "src": "/script.js", "dest": "/public/script.js" },
+    { "src": "/", "dest": "/public/index.html" }
   ]
 }
