@@ -6,7 +6,7 @@
     { "src": "public/script.js", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/api/APINFTMetadata", "dest": "/api/APINFTMetadata.js" },
+    { "src": "/api/nftMetadata", "dest": "/api/APiNFTMetadata.js" },
     { "src": "/script.js", "dest": "/public/script.js" },
     { "src": "/", "dest": "/public/index.html" }
   ]
